@@ -1,0 +1,4 @@
+rootProject.name = 'microservice-intro'
+include 'resource-service'
+include 'song-service'
+
