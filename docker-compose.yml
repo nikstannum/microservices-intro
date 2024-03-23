@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  postgres-metadata:
+    image: 'postgres:14-alpine'
+    container_name: 'db_metadata'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=metadata
+    ports:
+      - "5434:5432"
+
+  postgres-resources:
+    image: 'postgres:14-alpine'
+    container_name: 'db_resources'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=resources
+    ports:
+      - "5433:5432"
+
+  song-service:
+    build: ./song-service
+    restart: on-failure
+    container_name: 'song-service'
+    depends_on:
+      - postgres-metadata
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-metadata:5432/metadata
+
+  resource-service:
+    build: ./resource-service
+    restart: on-failure
+    container_name: 'resource-service'
+    depends_on:
+      - postgres-resources
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-resources:5432/resources
+      - SONG_SERVICE_URL=http://song-service:7000
+    ports:
+      - "8080:8080"
+
