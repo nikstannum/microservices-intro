@@ -45,9 +45,7 @@ public class ResourceServiceImpl implements ResourceService {
         mp3File.setFile(blob);
         Long resourceID = repository.save(mp3File).getResourceId();
         saveMetaData(bytes, resourceID);
-        ResourceIdDto id = new ResourceIdDto();
-        id.setId(resourceID);
-        return id;
+        return resourceIdMapper.convert(resourceID);
     }
 
     private void saveMetaData(byte[] bytes, Long resourceID) {
@@ -70,8 +68,6 @@ public class ResourceServiceImpl implements ResourceService {
     public ResourceIdsDto delete(List<Long> ids) {
         repository.deleteAllById(ids);
         songClient.deleteByResourceId(ids);
-        ResourceIdsDto resourceIdsDto = new ResourceIdsDto();
-        resourceIdsDto.setIds(ids);
-        return resourceIdsDto;
+        return resourceIdMapper.convert(ids);
     }
 }

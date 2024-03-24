@@ -9,7 +9,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
@@ -17,21 +16,20 @@ import org.hibernate.proxy.HibernateProxy;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Entity
 @Table(name = "metadata", indexes = {
         @Index(
                 name = "idx_artist_name",
-                columnList = "artist", unique = true
+                columnList = "artist"
         ),
         @Index(name = "idx_name_artist",
-                columnList = "name, artist"
+                columnList = "name, artist", unique = true
         )
 })
 public class MetaData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "metadata_id")
     private Long id;
 

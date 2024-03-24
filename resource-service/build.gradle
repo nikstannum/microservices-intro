@@ -39,6 +39,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.h2database:h2'
 
     implementation 'org.apache.tika:tika-core:2.9.1'
     implementation 'org.apache.tika:tika-parsers:2.9.1'
@@ -49,12 +50,12 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
-}
 
-compileJava {
-    options.compilerArgs = [
-            '-Amapstruct.defaultComponentModel=spring'
-    ]
+    compileJava {
+        options.compilerArgs = [
+                '-Amapstruct.defaultComponentModel=spring'
+        ]
+    }
 }
 
 tasks.named('test') {

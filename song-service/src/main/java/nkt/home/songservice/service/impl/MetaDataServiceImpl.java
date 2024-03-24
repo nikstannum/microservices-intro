@@ -25,9 +25,9 @@ public class MetaDataServiceImpl implements MetaDataService {
     @Override
     public ResourceIdDto uploadMetaData(MetaDataDto metaDataDto) {
         MetaData metaData = metaDataMapper.convert(metaDataDto);
-        Long id = metaDataRepository.save(metaData).getId();
+        metaDataRepository.save(metaData);
         ResourceIdDto resourceIdDto = new ResourceIdDto();
-        resourceIdDto.setResourceID(id);
+        resourceIdDto.setResourceID(metaDataDto.getResourceId());
         return resourceIdDto;
     }
 

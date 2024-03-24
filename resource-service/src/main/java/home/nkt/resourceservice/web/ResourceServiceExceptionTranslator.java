@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 @Slf4j
 @RestControllerAdvice
@@ -21,6 +22,12 @@ public class ResourceServiceExceptionTranslator {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void notValid(MethodArgumentNotValidException e) {
+        log.error("Not valid", e);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void notValid(HandlerMethodValidationException e) {
         log.error("Not valid", e);
     }
 

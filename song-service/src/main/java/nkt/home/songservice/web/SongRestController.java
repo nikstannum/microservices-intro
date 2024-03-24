@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/songs")
 public class SongRestController {
 
+    static final String BASE_URL = "/v1/songs";
+
     private final MetaDataService metaDataService;
 
     @PostMapping
@@ -29,7 +31,7 @@ public class SongRestController {
         return metaDataService.uploadMetaData(metaDataDto);
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public MetaDataDto getMetaData(@PathVariable("id") Long resourceId) {
         return metaDataService.downloadMetaData(resourceId);
     }

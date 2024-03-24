@@ -26,7 +26,7 @@ public class Mp3File {
     @Column(name = "resource_id")
     private Long resourceId;
 
-    @Column(name = "file", nullable = false)
+    @Column(name = "binary_file", nullable = false)
     private Blob file;
 
     @Override
