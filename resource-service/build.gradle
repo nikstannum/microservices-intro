@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
+    id "io.freefair.lombok" version "6.5.1"
 }
 
 group = 'home.nkt'
@@ -28,6 +29,8 @@ repositories {
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.14.0'
 
+    implementation 'org.codehaus.janino:janino:3.1.12'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -48,8 +51,10 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     annotationProcessor 'org.projectlombok:lombok'
 
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+
 
     compileJava {
         options.compilerArgs = [
