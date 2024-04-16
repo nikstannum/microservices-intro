@@ -3,6 +3,9 @@ package home.nkt.resourceservice.service.impl;
 import home.nkt.resourceservice.client.SongClient;
 import home.nkt.resourceservice.data.Mp3File;
 import home.nkt.resourceservice.data.repository.ResourceRepository;
+import home.nkt.resourceservice.exception.NotFoundException;
+import home.nkt.resourceservice.exception.dto.ErrorDto;
+import home.nkt.resourceservice.exception.dto.ErrorType;
 import home.nkt.resourceservice.service.MetaDataService;
 import home.nkt.resourceservice.service.ResourceService;
 import home.nkt.resourceservice.service.dto.MetaDataDto;
@@ -15,7 +18,6 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import javax.sql.rowset.serial.SerialBlob;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,7 +58,10 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public byte[] download(long id) {
-        Mp3File mp3File = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Not found song by id = " + id));
+        Mp3File mp3File = repository.findById(id).orElseThrow(() -> new NotFoundException(ErrorDto.builder()
+                .withErrorType(ErrorType.CLIENT_ERROR)
+                .withErrorMessage("Not found song by id = " + id)
+                .build()));
         try (InputStream is = mp3File.getFile().getBinaryStream()) {
             return is.readAllBytes();
         } catch (IOException | SQLException e) {

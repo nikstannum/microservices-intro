@@ -5,6 +5,7 @@ import home.nkt.resourceservice.service.ResourceService;
 import home.nkt.resourceservice.service.dto.MetaDataDto;
 import home.nkt.resourceservice.service.dto.ResourceIdDto;
 import home.nkt.resourceservice.service.dto.ResourceIdsDto;
+import home.nkt.resourceservice.service.validator.mp3.Mp3File;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@SuppressWarnings("unused")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ResourceRestController.BASE_URL)
@@ -40,9 +42,10 @@ public class ResourceRestController {
 
     private final MetaDataService metaDataService;
 
-    @PostMapping
+
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public ResourceIdDto upload(@RequestParam("file") @RequestPart MultipartFile multipartFile) {
+    public ResourceIdDto upload(@RequestPart("multipartFile") @Mp3File MultipartFile multipartFile) {
         byte[] bytes;
         try {
             bytes = multipartFile.getBytes();
@@ -71,4 +74,3 @@ public class ResourceRestController {
         return resourceService.delete(ids);
     }
 }
-

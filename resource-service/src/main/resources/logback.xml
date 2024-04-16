@@ -17,10 +17,10 @@
             <evaluator>
                 <expression>
                     boolean isServerLog = !logger.startsWith("org.hibernate")
-                            &amp;&amp; !logger.startsWith("org.springframework")
-                            &amp;&amp; !logger.startsWith("home.nkt.resourceservice");
+                    &amp;&amp; !logger.startsWith("org.springframework")
+                    &amp;&amp; !logger.startsWith("home.nkt.resourceservice");
                     if (isServerLog) {
-                        return true;
+                    return true;
                     }
                     return false;
                 </expression>

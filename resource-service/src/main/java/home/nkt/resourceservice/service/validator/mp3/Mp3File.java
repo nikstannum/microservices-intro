@@ -1,4 +1,4 @@
-package home.nkt.resourceservice.service.validator;
+package home.nkt.resourceservice.service.validator.mp3;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

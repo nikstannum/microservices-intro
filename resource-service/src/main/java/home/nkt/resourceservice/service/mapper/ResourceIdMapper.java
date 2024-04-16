@@ -14,7 +14,6 @@ public interface ResourceIdMapper {
         return resourceIdDto;
     }
 
-
     default Long convert(ResourceIdDto resourceIdDto) {
         return resourceIdDto == null ? null : resourceIdDto.getId();
     }

@@ -16,4 +16,5 @@ public class ResourceServiceApplication {
     public WebClient webClient() {
         return WebClient.create();
     }
+
 }
