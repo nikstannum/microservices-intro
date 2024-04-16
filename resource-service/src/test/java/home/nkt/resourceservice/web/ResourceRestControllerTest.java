@@ -5,6 +5,11 @@ import home.nkt.resourceservice.service.ResourceService;
 import home.nkt.resourceservice.service.dto.MetaDataDto;
 import home.nkt.resourceservice.service.dto.ResourceIdDto;
 import home.nkt.resourceservice.service.dto.ResourceIdsDto;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +54,7 @@ class ResourceRestControllerTest {
         expected.setId(1L);
         when(resourceService.upload(any())).thenReturn(expected);
 
-        MockMultipartFile multipartFile = new MockMultipartFile("file", new byte[1]);
+        MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", getBytes());
 
         // when - then
         mvc.perform(multipart(HttpMethod.POST, ResourceRestController.BASE_URL)
@@ -57,6 +62,30 @@ class ResourceRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(1)));
+    }
+
+    private byte[] getBytes() throws IOException {
+        Path path = Paths.get("src", "test", "resources", "songs", "Король и Шут - Лесник.mp3");
+        try (InputStream is = new FileInputStream(path.toFile())) {
+            return is.readAllBytes();
+        }
+    }
+
+    @Test
+    void checkUploadShouldReturnBadRequest() throws Exception {
+        // given
+        ResourceIdDto expected = new ResourceIdDto();
+        expected.setId(1L);
+        when(resourceService.upload(any())).thenReturn(expected);
+
+        MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", new byte[1]);
+
+        // when - then
+        mvc.perform(multipart(HttpMethod.POST, ResourceRestController.BASE_URL)
+                        .file(multipartFile))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.messages.file[0]", is("Sent file is not mp3 file")));
     }
 
     @Test
