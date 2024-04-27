@@ -1,6 +1,7 @@
 package home.nkt.resourceservice.service;
 
-import home.nkt.resourceservice.service.dto.MetaDataDto;
+
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
 
 public interface MetaDataService {
 

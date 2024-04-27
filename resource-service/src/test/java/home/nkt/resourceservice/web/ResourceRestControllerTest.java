@@ -1,10 +1,11 @@
 package home.nkt.resourceservice.web;
 
+import com.google.protobuf.Int64Value;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.resourceservice.service.MetaDataService;
 import home.nkt.resourceservice.service.ResourceService;
-import home.nkt.resourceservice.service.dto.MetaDataDto;
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
-import home.nkt.resourceservice.service.dto.ResourceIdsDto;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,8 +51,9 @@ class ResourceRestControllerTest {
     @Test
     void checkUploadShouldReturnEquals() throws Exception {
         // given
-        ResourceIdDto expected = new ResourceIdDto();
-        expected.setId(1L);
+        ResourceIdDto expected = ResourceIdDto.newBuilder()
+                .setId(Int64Value.of(1L))
+                .build();
         when(resourceService.upload(any())).thenReturn(expected);
 
         MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", getBytes());
@@ -61,11 +63,11 @@ class ResourceRestControllerTest {
                         .file(multipartFile))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(1)));
+                .andExpect(jsonPath("$.id", is("1")));
     }
 
     private byte[] getBytes() throws IOException {
-        Path path = Paths.get("src", "test", "resources", "songs", "Король и Шут - Лесник.mp3");
+        Path path = Paths.get("src", "test", "resources", "songs", "Lesnik.mp3");
         try (InputStream is = new FileInputStream(path.toFile())) {
             return is.readAllBytes();
         }
@@ -74,8 +76,9 @@ class ResourceRestControllerTest {
     @Test
     void checkUploadShouldReturnBadRequest() throws Exception {
         // given
-        ResourceIdDto expected = new ResourceIdDto();
-        expected.setId(1L);
+        ResourceIdDto expected = ResourceIdDto.newBuilder()
+                .setId(Int64Value.of(1L))
+                .build();
         when(resourceService.upload(any())).thenReturn(expected);
 
         MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", new byte[1]);
@@ -93,8 +96,9 @@ class ResourceRestControllerTest {
         // given
         byte[] bytes = new byte[1];
         when(resourceService.download(1L)).thenReturn(bytes);
-        MetaDataDto metaDataDto = new MetaDataDto();
-        metaDataDto.setName("song");
+        MetaDataDto metaDataDto = MetaDataDto.newBuilder()
+                .setName("song")
+                .build();
         when(metaDataService.getMetaData(bytes)).thenReturn(metaDataDto);
 
         // when - then
@@ -108,8 +112,9 @@ class ResourceRestControllerTest {
     @Test
     void checkDeleteShouldReturnOk() throws Exception {
         // given
-        ResourceIdsDto dto = new ResourceIdsDto();
-        dto.setIds(Collections.singletonList(1L));
+        ResourceIdsDto dto = ResourceIdsDto.newBuilder()
+                .addAllIds(Collections.singletonList(Int64Value.of(1L)))
+                .build();
         when(resourceService.delete(Collections.singletonList(1L))).thenReturn(dto);
 
         // then
@@ -117,7 +122,7 @@ class ResourceRestControllerTest {
                         .param("id", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.ids", is(Collections.singletonList(1))));
+                .andExpect(jsonPath("$.ids", is(Collections.singletonList("1"))));
     }
 
     @Test

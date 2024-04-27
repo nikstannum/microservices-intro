@@ -1,8 +1,8 @@
 package home.nkt.songservice.service;
 
-import home.nkt.songservice.service.dto.MetaDataDto;
-import home.nkt.songservice.service.dto.ResourceIdDto;
-import home.nkt.songservice.service.dto.ResourceIdsDto;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import java.util.List;
 
 public interface MetaDataService {

@@ -1,5 +1,9 @@
 package home.nkt.resourceservice.service.impl;
 
+import com.google.protobuf.Int64Value;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.resourceservice.client.SongClient;
 import home.nkt.resourceservice.data.Mp3File;
 import home.nkt.resourceservice.data.repository.ResourceRepository;
@@ -8,9 +12,6 @@ import home.nkt.resourceservice.exception.dto.ErrorDto;
 import home.nkt.resourceservice.exception.dto.ErrorType;
 import home.nkt.resourceservice.service.MetaDataService;
 import home.nkt.resourceservice.service.ResourceService;
-import home.nkt.resourceservice.service.dto.MetaDataDto;
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
-import home.nkt.resourceservice.service.dto.ResourceIdsDto;
 import home.nkt.resourceservice.service.mapper.ResourceIdMapper;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -45,15 +46,15 @@ public class ResourceServiceImpl implements ResourceService {
         }
         Mp3File mp3File = new Mp3File();
         mp3File.setFile(blob);
-        Long resourceID = repository.save(mp3File).getResourceId();
-        saveMetaData(bytes, resourceID);
-        return resourceIdMapper.convert(resourceID);
+        Long resourceId = repository.save(mp3File).getResourceId();
+        saveMetaData(bytes, resourceId);
+        return resourceIdMapper.convert(resourceId);
     }
 
     private void saveMetaData(byte[] bytes, Long resourceID) {
-        MetaDataDto metaData = metaDataService.getMetaData(bytes);
-        metaData.setResourceId(resourceID);
-        songClient.uploadMetaData(metaData);
+        MetaDataDto metaDataDto = metaDataService.getMetaData(bytes);
+        metaDataDto = metaDataDto.toBuilder().setResourceId(resourceID).build();
+        songClient.uploadMetaData(metaDataDto);
     }
 
     @Override

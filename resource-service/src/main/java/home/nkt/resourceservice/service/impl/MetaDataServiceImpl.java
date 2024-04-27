@@ -1,7 +1,9 @@
 package home.nkt.resourceservice.service.impl;
 
+import com.google.protobuf.Int32Value;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto.Builder;
 import home.nkt.resourceservice.service.MetaDataService;
-import home.nkt.resourceservice.service.dto.MetaDataDto;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Duration;
@@ -34,13 +36,31 @@ public class MetaDataServiceImpl implements MetaDataService {
     }
 
     private MetaDataDto buildMetaDataDto(Metadata metadata) {
-        MetaDataDto dto = new MetaDataDto();
-        dto.setName(metadata.get("dc:title"));
-        dto.setArtist(metadata.get("xmpDM:albumArtist"));
-        dto.setAlbum(metadata.get("xmpDM:album"));
-        dto.setLength(getDuration(metadata));
-        dto.setYear(getYear(metadata));
-        return dto;
+        String name = metadata.get("dc:title");
+        Integer year = getYear(metadata);
+        String artist = metadata.get("xmpDM:albumArtist");
+        String album = metadata.get("xmpDM:album");
+        String length = getDuration(metadata);
+
+
+        MetaDataDto metaDataDto = MetaDataDto.newBuilder()
+                .setName(name)
+                .build();
+
+        Builder metaDataDtoBuilder = metaDataDto.toBuilder();
+        if (year != null) {
+            metaDataDtoBuilder.setYear(Int32Value.of(year));
+        }
+        if (artist != null) {
+            metaDataDtoBuilder.setArtist(artist);
+        }
+        if (album != null) {
+            metaDataDtoBuilder.setAlbum(album);
+        }
+        if (length != null) {
+            metaDataDtoBuilder.setLength(length);
+        }
+        return metaDataDtoBuilder.build();
     }
 
     private Integer getYear(Metadata metadata) {

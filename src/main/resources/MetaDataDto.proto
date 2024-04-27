@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+package home;
+option java_package = "home.nkt.generated.protobuf";
+option java_outer_classname = "MetaDataProto";
+
+message MetaDataDto {
+  string name = 1;
+  optional string artist = 2;
+  optional string album = 3;
+  optional string length = 4;
+  optional int64 resource_id = 5;
+  optional google.protobuf.Int32Value year = 6;
+}

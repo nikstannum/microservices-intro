@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
     id "io.freefair.lombok" version "6.5.1"
+    id 'com.google.protobuf' version '0.9.4'
 }
 
 group = 'home.nkt'
@@ -51,6 +52,9 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     annotationProcessor 'org.projectlombok:lombok'
 
+    implementation 'com.google.protobuf:protobuf-java:3.24.0'
+    implementation 'com.google.protobuf:protobuf-java-util:4.26.1'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
@@ -62,6 +66,46 @@ dependencies {
         ]
     }
 }
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.18.0"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.31.1"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+
+            }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDirs '../src/main/resources'
+        }
+        java {
+            srcDirs 'src/main/java'
+        }
+    }
+}
+
+
+clean {
+    doLast {
+        def root = "${rootDir}"
+        def generatedProto = root + "/resource-service/src/main/java/home/nkt/generated/protobuf"
+        delete generatedProto
+        file(generatedProto).deleteDir()
+    }
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()

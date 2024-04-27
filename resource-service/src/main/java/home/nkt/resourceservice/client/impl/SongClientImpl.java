@@ -1,8 +1,8 @@
 package home.nkt.resourceservice.client.impl;
 
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
 import home.nkt.resourceservice.client.SongClient;
-import home.nkt.resourceservice.service.dto.MetaDataDto;
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class SongClientImpl implements SongClient {
         String response = webClient.post()
                 .uri(songServiceUrl + BASE_URI)
                 .bodyValue(metaDataDto)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaType.APPLICATION_PROTOBUF))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

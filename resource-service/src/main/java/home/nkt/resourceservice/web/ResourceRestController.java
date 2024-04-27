@@ -1,10 +1,10 @@
 package home.nkt.resourceservice.web;
 
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.resourceservice.service.MetaDataService;
 import home.nkt.resourceservice.service.ResourceService;
-import home.nkt.resourceservice.service.dto.MetaDataDto;
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
-import home.nkt.resourceservice.service.dto.ResourceIdsDto;
 import home.nkt.resourceservice.service.validator.mp3.Mp3File;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
@@ -43,7 +43,7 @@ public class ResourceRestController {
     private final MetaDataService metaDataService;
 
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResourceIdDto upload(@RequestPart("multipartFile") @Mp3File MultipartFile multipartFile) {
         byte[] bytes;
@@ -69,7 +69,7 @@ public class ResourceRestController {
                 .body(resource);
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResourceIdsDto delete(@RequestParam("id") @Valid @Size(max = 200, message = "Too many ids") List<Long> ids) {
         return resourceService.delete(ids);
     }

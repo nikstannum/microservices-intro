@@ -1,7 +1,7 @@
 package home.nkt.resourceservice.client;
 
-import home.nkt.resourceservice.service.dto.MetaDataDto;
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
 import java.util.List;
 
 public interface SongClient {

@@ -1,10 +1,13 @@
 package home.nkt.songservice.service.impl;
 
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.Int64Value;
+import com.google.protobuf.StringValue;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.songservice.data.MetaData;
 import home.nkt.songservice.data.repository.MetaDataRepository;
-import home.nkt.songservice.service.dto.MetaDataDto;
-import home.nkt.songservice.service.dto.ResourceIdDto;
-import home.nkt.songservice.service.dto.ResourceIdsDto;
 import home.nkt.songservice.service.mapper.MetaDataMapper;
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +52,9 @@ class MetaDataServiceImplTest {
         metaData.setId(1L);
         when(repository.save(any())).thenReturn(metaData);
 
-        ResourceIdDto expected = new ResourceIdDto();
-        expected.setResourceID(1L);
+        ResourceIdDto expected = ResourceIdDto.newBuilder()
+                .setId(Int64Value.of(1L))
+                .build();
 
         // when
         ResourceIdDto actual = service.uploadMetaData(getMetaDataDto());
@@ -89,9 +93,13 @@ class MetaDataServiceImplTest {
         // given
         doNothing().when(repository).deleteAllById(anyCollection());
 
-        ResourceIdsDto expected = new ResourceIdsDto();
         List<Long> ids = Arrays.asList(1L, 2L, 3L);
-        expected.setIds(ids);
+
+        ResourceIdsDto expected = ResourceIdsDto.newBuilder()
+                .addAllIds(ids.stream()
+                        .map(Int64Value::of)
+                        .toList())
+                .build();
 
         // when
         ResourceIdsDto actual = service.deleteMetaDataByIds(ids);
@@ -112,13 +120,13 @@ class MetaDataServiceImplTest {
     }
 
     private MetaDataDto getMetaDataDto() {
-        MetaDataDto metaData = new MetaDataDto();
-        metaData.setName("name");
-        metaData.setAlbum("album");
-        metaData.setArtist("artist");
-        metaData.setYear(2024);
-        metaData.setLength("00:03:00");
-        metaData.setResourceId(1L);
-        return metaData;
+        return MetaDataDto.newBuilder()
+                .setName("name")
+                .setAlbum("album")
+                .setArtist("artist")
+                .setYear(Int32Value.of(2024))
+                .setLength("00:03:00")
+                .setResourceId(1L)
+                .build();
     }
 }

@@ -1,7 +1,7 @@
 package home.nkt.resourceservice.service;
 
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
-import home.nkt.resourceservice.service.dto.ResourceIdsDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import java.util.List;
 
 public interface ResourceService {

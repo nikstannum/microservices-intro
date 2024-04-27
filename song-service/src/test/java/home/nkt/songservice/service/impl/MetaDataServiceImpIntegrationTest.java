@@ -1,9 +1,12 @@
 package home.nkt.songservice.service.impl;
 
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.Int64Value;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.songservice.service.MetaDataService;
-import home.nkt.songservice.service.dto.MetaDataDto;
-import home.nkt.songservice.service.dto.ResourceIdDto;
-import home.nkt.songservice.service.dto.ResourceIdsDto;
+import home.nkt.songservice.service.mapper.MetaDataMapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,14 +27,17 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private MetaDataService service;
+    @Autowired
+    private MetaDataMapper metaDataMapper;
 
     @Test
     void checkUploadMetaDataShouldReturnEquals() {
         // given
         MetaDataDto dto = getNewMetaDataDto();
 
-        ResourceIdDto expected = new ResourceIdDto();
-        expected.setResourceID(3L);
+        ResourceIdDto expected = ResourceIdDto.newBuilder()
+                .setId(Int64Value.of(3L))
+                .build();
 
         // when
         ResourceIdDto actual = service.uploadMetaData(dto);
@@ -41,14 +47,14 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
     }
 
     private MetaDataDto getNewMetaDataDto() {
-        MetaDataDto dto = new MetaDataDto();
-        dto.setName("Name");
-        dto.setArtist("Artist");
-        dto.setAlbum("Album");
-        dto.setLength("03:00:00");
-        dto.setYear(2010);
-        dto.setResourceId(3L);
-        return dto;
+        return MetaDataDto.newBuilder()
+                .setName("Name")
+                .setArtist("Artist")
+                .setAlbum("Album")
+                .setLength("03:00:00")
+                .setYear(Int32Value.of(2010))
+                .setResourceId(3L)
+                .build();
     }
 
     @Test
@@ -64,14 +70,14 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
     }
 
     private MetaDataDto getExistingMetaDataDto() {
-        MetaDataDto metaDataDto = new MetaDataDto();
-        metaDataDto.setName("Grape");
-        metaDataDto.setArtist("Nesoloduha");
-        metaDataDto.setAlbum("Best songs");
-        metaDataDto.setLength("03:00:00");
-        metaDataDto.setYear(2000);
-        metaDataDto.setResourceId(2L);
-        return metaDataDto;
+        return MetaDataDto.newBuilder()
+                .setName("Grape")
+                .setArtist("Nesoloduha")
+                .setAlbum("Best songs")
+                .setLength("03:00:00")
+                .setYear(Int32Value.of(2000))
+                .setResourceId(2L)
+                .build();
     }
 
     @Test
@@ -85,8 +91,11 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
         // given
         List<Long> ids = Arrays.asList(1L, 2L);
 
-        ResourceIdsDto expected = new ResourceIdsDto();
-        expected.setIds(ids);
+        ResourceIdsDto expected = ResourceIdsDto.newBuilder()
+                .addAllIds(ids.stream()
+                        .map(Int64Value::of)
+                        .toList())
+                .build();
 
         // when
         ResourceIdsDto actual = service.deleteMetaDataByIds(ids);
@@ -100,8 +109,11 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
         // given
         List<Long> ids = Arrays.asList(1L, 2L, 100L);
 
-        ResourceIdsDto expected = new ResourceIdsDto();
-        expected.setIds(ids);
+        ResourceIdsDto expected = ResourceIdsDto.newBuilder()
+                .addAllIds(ids.stream()
+                        .map(Int64Value::of)
+                        .toList())
+                .build();
 
         // when
         ResourceIdsDto actual = service.deleteMetaDataByIds(ids);

@@ -1,11 +1,12 @@
 package home.nkt.songservice.service.impl;
 
+import com.google.protobuf.Int64Value;
+import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.songservice.data.MetaData;
 import home.nkt.songservice.data.repository.MetaDataRepository;
 import home.nkt.songservice.service.MetaDataService;
-import home.nkt.songservice.service.dto.MetaDataDto;
-import home.nkt.songservice.service.dto.ResourceIdDto;
-import home.nkt.songservice.service.dto.ResourceIdsDto;
 import home.nkt.songservice.service.mapper.MetaDataMapper;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -26,9 +27,9 @@ public class MetaDataServiceImpl implements MetaDataService {
     public ResourceIdDto uploadMetaData(MetaDataDto metaDataDto) {
         MetaData metaData = metaDataMapper.convert(metaDataDto);
         metaDataRepository.save(metaData);
-        ResourceIdDto resourceIdDto = new ResourceIdDto();
-        resourceIdDto.setResourceID(metaDataDto.getResourceId());
-        return resourceIdDto;
+        return ResourceIdDto.newBuilder()
+                .setId(Int64Value.of(metaDataDto.getResourceId()))
+                .build();
     }
 
     @Override
@@ -41,8 +42,10 @@ public class MetaDataServiceImpl implements MetaDataService {
     @Override
     public ResourceIdsDto deleteMetaDataByIds(List<Long> ids) {
         metaDataRepository.deleteAllById(ids);
-        ResourceIdsDto resourceIdsDto = new ResourceIdsDto();
-        resourceIdsDto.setIds(ids);
-        return resourceIdsDto;
+        return ResourceIdsDto.newBuilder()
+                .addAllIds(ids.stream()
+                        .map(Int64Value::of)
+                        .toList())
+                .build();
     }
 }

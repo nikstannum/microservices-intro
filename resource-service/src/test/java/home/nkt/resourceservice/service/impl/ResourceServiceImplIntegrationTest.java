@@ -1,11 +1,12 @@
 package home.nkt.resourceservice.service.impl;
 
+import com.google.protobuf.Int64Value;
+import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
+import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.resourceservice.client.SongClient;
 import home.nkt.resourceservice.data.repository.ResourceRepository;
 import home.nkt.resourceservice.service.MetaDataService;
 import home.nkt.resourceservice.service.ResourceService;
-import home.nkt.resourceservice.service.dto.ResourceIdDto;
-import home.nkt.resourceservice.service.dto.ResourceIdsDto;
 import home.nkt.resourceservice.service.mapper.ResourceIdMapper;
 import jakarta.transaction.Transactional;
 import java.io.FileInputStream;
@@ -91,8 +92,9 @@ class ResourceServiceImplIntegrationTest {
     void delete() {
         // given
         doNothing().when(songClient).deleteByResourceId(any());
-        ResourceIdsDto expected = new ResourceIdsDto();
-        expected.setIds(Collections.singletonList(1L));
+        ResourceIdsDto expected = ResourceIdsDto.newBuilder()
+                .addAllIds(Collections.singletonList(Int64Value.of(1L)))
+                .build();
 
         // when
         ResourceIdsDto actual = resourceService.delete(Collections.singletonList(1L));
@@ -102,7 +104,7 @@ class ResourceServiceImplIntegrationTest {
     }
 
     private byte[] getBytes() throws IOException {
-        Path path = Paths.get("src", "test", "resources", "songs", "Король и Шут - Лесник.mp3");
+        Path path = Paths.get("src", "test", "resources", "songs", "Lesnik.mp3");
         try (InputStream is = new FileInputStream(path.toFile())) {
             return is.readAllBytes();
         }

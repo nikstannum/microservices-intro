@@ -2,14 +2,14 @@ To start **song-service**:
 
 ```
 docker run --name metadata_db -e POSTGRES_PASSWORD=root -e POSTGRES_DB=metadata -p 5434:5432 -d postgres
-gradlew song-service:bootRun
+gradlew song-service:bootRun --args='--spring.profiles.active=dev'
 ```
 
 To start **resource-service**:
 
 ```
 docker run --name resources_db -e POSTGRES_PASSWORD=root -e POSTGRES_DB=resources -p 5433:5432 -d postgres
-gradlew resource-service:bootRun
+gradlew resource-service:bootRun --args='--spring.profiles.active=dev'
 ```
 
 You can also start application, using **docker-compose.yml** file - run command
