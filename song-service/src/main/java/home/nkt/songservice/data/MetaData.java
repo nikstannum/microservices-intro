@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public class MetaData {
     private Long id;
 
     @Column(name = "name", nullable = false)
+    @Size(min = 1)
     private String name;
 
     @Column(name = "artist")

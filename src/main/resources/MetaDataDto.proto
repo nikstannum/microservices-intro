@@ -5,10 +5,10 @@ option java_package = "home.nkt.generated.protobuf";
 option java_outer_classname = "MetaDataProto";
 
 message MetaDataDto {
-  string name = 1;
-  optional string artist = 2;
-  optional string album = 3;
-  optional string length = 4;
-  optional int64 resource_id = 5;
-  optional google.protobuf.Int32Value year = 6;
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue artist = 2;
+  google.protobuf.StringValue album = 3;
+  google.protobuf.StringValue length = 4;
+  google.protobuf.Int64Value resource_id = 5;
+  google.protobuf.Int32Value year = 6;
 }

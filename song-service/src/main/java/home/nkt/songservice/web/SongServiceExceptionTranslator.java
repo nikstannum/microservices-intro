@@ -1,5 +1,6 @@
 package home.nkt.songservice.web;
 
+import home.nkt.songservice.exception.ValidationException;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,13 @@ public class SongServiceExceptionTranslator {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void notValid(HandlerMethodValidationException e) {
+        log.error("Not valid", e);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void notValid(ValidationException e) {
+        // todo add handling errors
         log.error("Not valid", e);
     }
 

@@ -2,6 +2,7 @@ package home.nkt.songservice.service.impl;
 
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
+import com.google.protobuf.StringValue;
 import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
 import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
 import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
@@ -48,12 +49,12 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
 
     private MetaDataDto getNewMetaDataDto() {
         return MetaDataDto.newBuilder()
-                .setName("Name")
-                .setArtist("Artist")
-                .setAlbum("Album")
-                .setLength("03:00:00")
+                .setName(StringValue.of("Name"))
+                .setArtist(StringValue.of("Artist"))
+                .setAlbum(StringValue.of("Album"))
+                .setLength(StringValue.of("03:00:00"))
                 .setYear(Int32Value.of(2010))
-                .setResourceId(3L)
+                .setResourceId(Int64Value.of(3L))
                 .build();
     }
 
@@ -71,12 +72,12 @@ class MetaDataServiceImpIntegrationTest extends BaseIntegrationTest {
 
     private MetaDataDto getExistingMetaDataDto() {
         return MetaDataDto.newBuilder()
-                .setName("Grape")
-                .setArtist("Nesoloduha")
-                .setAlbum("Best songs")
-                .setLength("03:00:00")
+                .setName(StringValue.of("Grape"))
+                .setArtist(StringValue.of("Nesoloduha"))
+                .setAlbum(StringValue.of("Best songs"))
+                .setLength(StringValue.of("03:00:00"))
                 .setYear(Int32Value.of(2000))
-                .setResourceId(2L)
+                .setResourceId(Int64Value.of(2L))
                 .build();
     }
 

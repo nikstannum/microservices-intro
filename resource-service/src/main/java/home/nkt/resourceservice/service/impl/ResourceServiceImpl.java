@@ -53,7 +53,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     private void saveMetaData(byte[] bytes, Long resourceID) {
         MetaDataDto metaDataDto = metaDataService.getMetaData(bytes);
-        metaDataDto = metaDataDto.toBuilder().setResourceId(resourceID).build();
+        metaDataDto = metaDataDto.toBuilder().setResourceId(Int64Value.of(resourceID)).build();
         songClient.uploadMetaData(metaDataDto);
     }
 

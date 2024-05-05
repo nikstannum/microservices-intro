@@ -15,6 +15,8 @@ java {
 
 ext {
     mapstructVersion = '1.5.5.Final'
+    sourceProtoFilesDir = '../src/main/resources'
+    generatedProtoClassesDir = 'src/main/java/home/nkt/generated/protobuf/'
 }
 
 configurations {
@@ -62,40 +64,69 @@ dependencies {
     }
 }
 
-protobuf{
+protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:3.18.0"
     }
-    plugins{
+    plugins {
         grpc {
             artifact = "io.grpc:protoc-gen-grpc-java:1.31.1"
         }
     }
-    generateProtoTasks{
-        all()*.plugins {
-            grpc {
+    generateProtoTasks {
+        all().each { task ->
+            def generatedFilesTree = fileTree(dir: generatedProtoClassesDir).files
+            def isEmptyProtoDir = generatedFilesTree.isEmpty()
+            if (isEmptyProtoDir) {
+                task.plugins {
+                    grpc {
+                    }
+                }
+                return
+            }
+            def (excludeProtoFiles) = getExcludeProtoFiles(generatedFilesTree)
+            if (excludeProtoFiles) {
+                sourceSets.main.proto.exclude(excludeProtoFiles)
+            } else {
+                task.enabled = false
             }
         }
     }
 }
 
+private List<String> getExcludeProtoFiles(Set<File> generatedFilesTree) {
+    def generatedClassNames = generatedFilesTree.collect { file ->
+        file.name.split('\\.')[0]
+    }
+    def protoFilesTree = fileTree(dir: sourceProtoFilesDir)
+    def protoFilesNameCollection = protoFilesTree.collect { file ->
+        file.name
+    }
+    def excludeProtoFiles = []
+    protoFilesNameCollection.each { protoFileName ->
+        def protoContent = file(sourceProtoFilesDir + '/' + protoFileName).text
+        def outerClassName
+        def matcher = (protoContent =~ /option\s+java_outer_classname\s*=\s*["']([^"']+)["']/)
+        if (matcher.find()) {
+            outerClassName = matcher.group(1)
+        } else {
+            outerClassName = protoFileName.split('\\.')[0]
+        }
+        if (generatedClassNames.contains(outerClassName)) {
+            excludeProtoFiles.add(protoFileName)
+        }
+    }
+    return [excludeProtoFiles] as List<String>
+}
+
 sourceSets {
     main {
         proto {
-            srcDirs '../src/main/resources'
+            srcDirs sourceProtoFilesDir
         }
         java {
             srcDirs 'src/main/java'
         }
-    }
-}
-
-clean {
-    doLast {
-        def root = "${rootDir}"
-        def generatedProto = root + "/song-service/src/main/java/home/nkt/generated/protobuf"
-        delete generatedProto
-        file(generatedProto).deleteDir()
     }
 }
 

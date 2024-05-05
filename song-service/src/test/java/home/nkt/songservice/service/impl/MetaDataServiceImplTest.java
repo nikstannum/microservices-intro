@@ -121,12 +121,12 @@ class MetaDataServiceImplTest {
 
     private MetaDataDto getMetaDataDto() {
         return MetaDataDto.newBuilder()
-                .setName("name")
-                .setAlbum("album")
-                .setArtist("artist")
+                .setName(StringValue.of("name"))
+                .setAlbum(StringValue.of("album"))
+                .setArtist(StringValue.of("artist"))
                 .setYear(Int32Value.of(2024))
-                .setLength("00:03:00")
-                .setResourceId(1L)
+                .setLength(StringValue.of("00:03:00"))
+                .setResourceId(Int64Value.of(1L))
                 .build();
     }
 }

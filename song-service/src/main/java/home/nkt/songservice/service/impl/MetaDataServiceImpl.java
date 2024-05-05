@@ -28,7 +28,7 @@ public class MetaDataServiceImpl implements MetaDataService {
         MetaData metaData = metaDataMapper.convert(metaDataDto);
         metaDataRepository.save(metaData);
         return ResourceIdDto.newBuilder()
-                .setId(Int64Value.of(metaDataDto.getResourceId()))
+                .setId(metaDataDto.getResourceId())
                 .build();
     }
 

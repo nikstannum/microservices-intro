@@ -2,10 +2,12 @@ package home.nkt.songservice.web;
 
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
+import com.google.protobuf.StringValue;
 import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
 import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
 import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
 import home.nkt.songservice.service.MetaDataService;
+import home.nkt.songservice.service.validator.MetaDataDtoValidator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,9 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -30,10 +33,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(value = SongRestController.class,
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MetaDataDtoValidator.class))
 class SongRestControllerTest {
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @MockBean
     private MetaDataService service;
@@ -50,6 +52,26 @@ class SongRestControllerTest {
     }
 
     @Test
+    void checkSaveMetaDataShouldReturnStatusBadRequest() throws Exception {
+        // given
+        ResourceIdDto resourceIdDto = ResourceIdDto.newBuilder()
+                .setId(Int64Value.of(1L))
+                .build();
+
+        when(service.uploadMetaData(any())).thenReturn(resourceIdDto);
+
+        MetaDataDto metaDataDto = MetaDataDto.newBuilder()
+                .setName(StringValue.of("name"))
+                .build();
+
+        // when - then
+        mvc.perform(post(SongRestController.BASE_URL)
+                        .contentType(APPLICATION_PROTOBUF)
+                        .content(metaDataDto.toByteArray()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void checkSaveMetaDataShouldReturnEquals() throws Exception {
         // given
         ResourceIdDto resourceIdDto = ResourceIdDto.newBuilder()
@@ -59,7 +81,8 @@ class SongRestControllerTest {
         when(service.uploadMetaData(any())).thenReturn(resourceIdDto);
 
         MetaDataDto metaDataDto = MetaDataDto.newBuilder()
-                .setName("name")
+                .setName(StringValue.of("name"))
+                .setResourceId(Int64Value.of(123L))
                 .build();
 
         ResourceIdDto expected = ResourceIdDto.newBuilder()
@@ -79,11 +102,11 @@ class SongRestControllerTest {
     void checkGetMetaDataShouldReturnEquals() throws Exception {
         // given
         MetaDataDto metaDataDto = MetaDataDto.newBuilder()
-                .setResourceId(1L)
-                .setName("name")
-                .setArtist("artist")
-                .setAlbum("album")
-                .setLength("03:00:00")
+                .setResourceId(Int64Value.of(1L))
+                .setName(StringValue.of("name"))
+                .setArtist(StringValue.of("artist"))
+                .setAlbum(StringValue.of("album"))
+                .setLength(StringValue.of("03:00:00"))
                 .setYear(Int32Value.of(2000))
                 .build();
 

@@ -1,6 +1,7 @@
 package home.nkt.resourceservice.service.impl;
 
 import com.google.protobuf.Int32Value;
+import com.google.protobuf.StringValue;
 import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
 import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto.Builder;
 import home.nkt.resourceservice.service.MetaDataService;
@@ -42,23 +43,25 @@ public class MetaDataServiceImpl implements MetaDataService {
         String album = metadata.get("xmpDM:album");
         String length = getDuration(metadata);
 
+        Builder metaDataDtoBuilder = MetaDataDto.newBuilder();
+        if (!StringUtils.isBlank(name)) {
+            metaDataDtoBuilder.setName(StringValue.of(name));
+        }
 
-        MetaDataDto metaDataDto = MetaDataDto.newBuilder()
-                .setName(name)
-                .build();
+        if (artist != null) {
+            metaDataDtoBuilder.setArtist(StringValue.of(artist));
+        }
 
-        Builder metaDataDtoBuilder = metaDataDto.toBuilder();
+        if (album != null) {
+            metaDataDtoBuilder.setAlbum(StringValue.of(album));
+        }
+
+        if (length != null) {
+            metaDataDtoBuilder.setLength(StringValue.of(length));
+        }
+
         if (year != null) {
             metaDataDtoBuilder.setYear(Int32Value.of(year));
-        }
-        if (artist != null) {
-            metaDataDtoBuilder.setArtist(artist);
-        }
-        if (album != null) {
-            metaDataDtoBuilder.setAlbum(album);
-        }
-        if (length != null) {
-            metaDataDtoBuilder.setLength(length);
         }
         return metaDataDtoBuilder.build();
     }

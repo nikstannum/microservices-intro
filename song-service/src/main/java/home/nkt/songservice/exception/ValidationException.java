@@ -1,10 +1,8 @@
-package home.nkt.resourceservice.exception;
+package home.nkt.songservice.exception;
 
-import lombok.Getter;
 import org.springframework.validation.Errors;
 
-@Getter
-public class ValidationException extends ResourceServiceAppException {
+public class ValidationException extends SongServiceAppException {
 
     private final Errors errors;
 

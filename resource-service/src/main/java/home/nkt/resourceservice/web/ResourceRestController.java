@@ -60,7 +60,7 @@ public class ResourceRestController {
         byte[] data = resourceService.download(id);
         ByteArrayResource resource = new ByteArrayResource(data);
         MetaDataDto metaData = metaDataService.getMetaData(data);
-        String encodedFileName = URLEncoder.encode(metaData.getName() + ".mp3", StandardCharsets.UTF_8);
+        String encodedFileName = URLEncoder.encode(metaData.getName().getValue() + ".mp3", StandardCharsets.UTF_8);
         encodedFileName = encodedFileName.replaceAll("\\+", "%20");
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("audio/mpeg"))

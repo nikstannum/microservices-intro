@@ -1,6 +1,7 @@
 package home.nkt.resourceservice.web;
 
 import com.google.protobuf.Int64Value;
+import com.google.protobuf.StringValue;
 import home.nkt.generated.protobuf.MetaDataProto.MetaDataDto;
 import home.nkt.generated.protobuf.ResourceIdDtoProto.ResourceIdDto;
 import home.nkt.generated.protobuf.ResourceIdsDtoProto.ResourceIdsDto;
@@ -97,7 +98,7 @@ class ResourceRestControllerTest {
         byte[] bytes = new byte[1];
         when(resourceService.download(1L)).thenReturn(bytes);
         MetaDataDto metaDataDto = MetaDataDto.newBuilder()
-                .setName("song")
+                .setName(StringValue.of("song"))
                 .build();
         when(metaDataService.getMetaData(bytes)).thenReturn(metaDataDto);
 

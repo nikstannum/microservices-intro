@@ -12,13 +12,18 @@ docker run --name resources_db -e POSTGRES_PASSWORD=root -e POSTGRES_DB=resource
 gradlew resource-service:bootRun --args='--spring.profiles.active=dev'
 ```
 
-You can also start application, using **docker-compose.yml** file - run command
+You can also start application, using **docker-compose.yml** file - run command. Before that you should build project.
 
 ```
 docker-compose up
 ```
 
-The next ports will be exposed if you use **docker-compose.yml** file:
+Finally, you can run application using bash script **run.sh**. You should go to root project directory and launch
+```
+./run.sh
+```
+
+The next ports will be exposed if you use **docker-compose.yml** file or **run.sh** file:
 8080 - for resource-service
 5433 - to have opportunity to get access to resource-service db
 5434 - to have opportunity to get access to song-service db
